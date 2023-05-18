@@ -2,58 +2,23 @@ package tictactoe
 
 import (
 	"fmt"
-	"bufio"
-	"os"
 	"math/rand"
-	"strconv"
 )
 
 func TicTacToe() int {
-	scanner := bufio.NewScanner(os.Stdin)
 	board := makeBoard() // To get a new board at the beginning of the game.
 
 	printBoard(board)
 	for {
-		for {
-			fmt.Print("Choose a box (1-9): " ) // Letting the player choose one of the cells
-			scanner.Scan()
-			
-			playerIndex, _ := strconv.Atoi(scanner.Text())
-			if board[playerIndex-1] == "[   ]" {
-				board[playerIndex-1] = "[ X ]"
-				break
-			}
+		selectCell(&board)
 
-			fmt.Println("Try another cell.")
-		}
-
-		allBoardUsed := true
-		for i := range board {
-			if board[i] == "[   ]" {
-				allBoardUsed = false
-				fmt.Println("he")
-				break
-			}
-		}
-
-		if allBoardUsed {
-			fmt.Println("hi")
-			board = makeBoard() // We will create a new empty board if nobody won. 
-		}
-
-		for {
-			randIndex := rand.Intn(9) // This will choose a random cell from the board for the computer
-			if board[randIndex] == "[   ]" { // If that randomly picked cell is not occupied then we will put an O in it as the computer's choice. 
-				board[randIndex] = "[ O ]"
-				break
-			}
-		}
-		printBoard(board) // Here we will print what the board looks like after each round.
-
+		// Here we will print what the board looks like after each round.
+		printBoard(board)
+	
 		// The following switch statement is to check for the 8 possible winning combos.
 		if areCellsEqual, winningCellIndex := checkForCellsEquality(board); areCellsEqual {
 			return checkForTicTacToeWinner(board, winningCellIndex)
-		}
+		}		
 	}
 }
 
@@ -67,7 +32,7 @@ func makeBoard() [9]string {
 	return board
 }
 
-// This function prints out the tic-tac-toe form.
+// This function prints out the tic-tac-toe board.
 func printBoard(board [9]string) {
 	for i := range board {
 		fmt.Print(board[i])
@@ -75,6 +40,42 @@ func printBoard(board [9]string) {
 			fmt.Println()
 		}
 	}
+}
+
+func selectCell(boardPtr *[9]string) {
+	cellIndex := 0
+
+	fmt.Print("Choose a cell from [1-9]:") // This for loop will give the player a cell
+	for {
+		fmt.Scanln(&cellIndex)
+		if boardPtr[cellIndex-1] == "[   ]" {
+			boardPtr[cellIndex-1] = "[ X ]"
+			break
+		}
+		fmt.Print("Cell already occupied. Try another one: ")
+	}
+	checkForDraw(boardPtr)
+
+	for { 
+		cellIndex = rand.Intn(len(boardPtr)) // This will choose a random cell from the board for the computer
+		if boardPtr[cellIndex] == "[   ]" { 
+			boardPtr[cellIndex] = "[ O ]"
+			break
+		}
+	}
+	checkForDraw(boardPtr)
+}
+
+func checkForDraw(boardPtr *[9]string) {
+	for i := range boardPtr {
+		if boardPtr[i] == "[   ]" {
+			return
+		}
+	}
+
+	printBoard(*boardPtr)
+	fmt.Println("There was a draw.")
+	*boardPtr = makeBoard()
 }
 
 func checkForCellAvailabilty(chosenIndex int, board [9]string) bool {

@@ -47,7 +47,7 @@ func main() {
    intervals to make it look cool I guess. 
 */ 
 func printGameMessage() {
-	gameMessage := "Welcome to the almost impossible to beat game.\nIn this game you get to play three games.\n1. Hangman\n2. Tic-Tac-Toe\n3. Blackjack\nEach game is harder than the one before it.\nYou get one point from completing each game\nYou need to win all three games to win.\nGood luck. You will need it!.\n\n"
+	gameMessage := "Welcome to the almost impossible to beat game.\nIn this game you get to play three games.\n1. Hangman\n2. Tic-Tac-Toe\n3. Blackjack\nEach game is harder than the one before it.\nYou get one point from completing each game.\nYou need to win all three games to win.\nGood luck. You will need it!.\n\n"
 
 	for i := range gameMessage { // i is set to be the starting byte index for each unicode character in the string
 		fmt.Print(string(gameMessage[i]))
